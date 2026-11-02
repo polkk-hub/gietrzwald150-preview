@@ -1,0 +1,71 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gietrzwałd 150 — Światowa Trasa Koncertowa 2027 (podgląd)</title>
+<meta name="description" content="Proponowana światowa trasa koncertowa z okazji 150-lecia objawień w Gietrzwałdzie (1877–2027). Wersja podglądowa.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--bg:#070b17;--navy:#0d1530;--gold:#c9a44c;--gold2:#e8d08a;--txt:#e9e4d6;--mut:#a9a38f}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--gold2);line-height:1.15}
+a{color:var(--gold2)}:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+.skip{position:absolute;left:-999px}.skip:focus{left:1rem;top:1rem;background:var(--gold);color:#000;padding:.5rem;z-index:99}
+.banner{background:var(--gold);color:#140f00;text-align:center;font-size:.85rem;padding:.4rem 1rem;font-weight:600}
+nav{position:sticky;top:0;z-index:50;background:rgba(7,11,23,.92);backdrop-filter:blur(6px);border-bottom:1px solid rgba(201,164,76,.25);display:flex;justify-content:space-between;align-items:center;padding:.7rem 5vw;flex-wrap:wrap;gap:.5rem}
+nav .logo{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--gold2);text-decoration:none}nav ul{list-style:none;display:flex;gap:1.2rem;margin:0;padding:0;flex-wrap:wrap}nav ul a{text-decoration:none;color:var(--txt);font-size:.9rem}nav ul a:hover{color:var(--gold2)}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--gold);background:transparent;color:var(--gold2);padding:.6rem 1.3rem;border-radius:2px;text-decoration:none;display:inline-block}.btn.solid{background:var(--gold);color:#120d00}
+.hero{min-height:88vh;display:grid;place-items:center;text-align:center;padding:4rem 5vw;background:radial-gradient(ellipse at 50% 30%,rgba(201,164,76,.18),transparent 60%),linear-gradient(180deg,var(--navy),var(--bg));position:relative;overflow:hidden}
+.hero svg.rays{position:absolute;inset:0;width:100%;height:100%;opacity:.25}
+.hero .yrs{letter-spacing:.5em;color:var(--gold);font-size:.95rem}.hero h1{font-size:clamp(2.6rem,7vw,5.5rem);margin:.4rem 0}.hero h1 em{display:block;font-size:.45em;color:var(--txt);font-weight:400}
+.hero p{max-width:640px;margin:1rem auto 2rem;color:var(--mut)}
+.num{font-family:'Cormorant Garamond',serif;font-size:clamp(6rem,18vw,12rem);color:transparent;-webkit-text-stroke:1px var(--gold);line-height:1;margin:0}
+section{padding:5rem 5vw;max-width:1200px;margin:auto}.eyebrow{color:var(--gold);letter-spacing:.3em;text-transform:uppercase;font-size:.75rem}
+h2{font-size:clamp(2rem,4vw,3rem);margin:.3rem 0 1rem}.divider{width:80px;height:1px;background:var(--gold);margin:1rem 0 2rem}
+.note{border:1px dashed var(--gold);padding:.8rem 1rem;color:var(--gold2);font-size:.9rem;margin-bottom:1.5rem}
+#map{height:440px;border:1px solid rgba(201,164,76,.4);margin-bottom:2rem;filter:saturate(.6)}
+.stops{list-style:none;padding:0;margin:0;display:grid;gap:.6rem}.stops li{display:grid;grid-template-columns:110px 1fr auto;gap:1rem;align-items:center;padding:.8rem 1rem;border-left:2px solid var(--gold);background:rgba(13,21,48,.6);cursor:pointer}
+.stops li:hover,.stops li:focus{background:rgba(201,164,76,.12)}.stops .d{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold2)}.tag{font-size:.7rem;border:1px solid var(--mut);color:var(--mut);padding:.1rem .5rem;border-radius:20px;white-space:nowrap}
+.stops small{color:var(--mut);display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.3rem}
+.card{background:linear-gradient(160deg,#111a38,#0a0f20);border:1px solid rgba(201,164,76,.3);padding:1.4rem;position:relative}
+.card svg{width:56px;height:56px;stroke:var(--gold);fill:none;stroke-width:1.2;margin-bottom:.5rem}.card h3{margin:.2rem 0;font-size:1.45rem}.card .c{color:var(--gold);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}.card p{color:var(--mut);font-size:.92rem;margin:.5rem 0 0}
+.tickets{text-align:center;background:radial-gradient(ellipse at center,rgba(201,164,76,.12),transparent 70%)}
+form{max-width:520px;margin:1.5rem auto 0;display:grid;gap:.8rem;text-align:left}label{font-size:.85rem;color:var(--mut)}input,select{width:100%;font:inherit;padding:.7rem;background:#0d1530;border:1px solid rgba(201,164,76,.4);color:var(--txt)}
+.chk{display:flex;gap:.5rem;align-items:flex-start}.chk input{width:auto;margin-top:.3rem}
+#thanks{display:none;border:1px solid var(--gold);padding:1.5rem;max-width:520px;margin:1.5rem auto}
+footer{border-top:1px solid rgba(201,164,76,.3);padding:3rem 5vw;text-align:center;color:var(--mut);font-size:.88rem}footer .ph{color:var(--gold2);border-bottom:1px dashed}
+@media(max-width:640px){.stops li{grid-template-columns:1fr}nav ul{gap:.8rem}#map{height:320px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body>
+<a class="skip" href="#main">Przejdź do treści</a>
+<div class="banner" data-pl="Wersja podglądowa — trasa i terminy są propozycją, nic nie zostało potwierdzone." data-en="Preview version — the tour and dates are a proposal; nothing is confirmed yet.">Wersja podglądowa — trasa i terminy są propozycją, nic nie zostało potwierdzone.</div>
+<nav aria-label="Główna nawigacja"><a class="logo" href="#">Gietrzwałd 150</a>
+<ul><li><a href="#trasa" data-pl="Trasa" data-en="Tour">Trasa</a></li><li><a href="#miejsca" data-pl="Miejsca" data-en="Venues">Miejsca</a></li><li><a href="#bilety" data-pl="Bilety" data-en="Tickets">Bilety</a></li><li><a href="#kontakt" data-pl="Kontakt" data-en="Contact">Kontakt</a></li></ul>
+<button id="lang" aria-label="Switch language / Zmień język">EN</button></nav>
+<main id="main">
+<header class="hero">
+<svg class="rays" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g stroke="#c9a44c" stroke-width=".6">
+</g></svg>
+<div><div class="yrs">1877 · 2027</div><p class="num" aria-hidden="true">150</p>
+<h1>Gietrzwałd 150<em data-pl="Światowa Trasa Koncertowa 2027" data-en="World Concert Tour 2027">Światowa Trasa Koncertowa 2027</em></h1>
+<p data-pl="W 150. rocznicę objawień Matki Bożej w Gietrzwałdzie — jedynych w Polsce zatwierdzonych przez Kościół — muzyka sakralna wyrusza z Warmii w podróż przez największe sale koncertowe i świątynie świata." data-en="On the 150th anniversary of the Marian apparitions in Gietrzwałd — the only ones in Poland approved by the Church — sacred music sets out from Warmia on a journey through the world's greatest concert halls and churches.">W 150. rocznicę objawień Matki Bożej w Gietrzwałdzie — jedynych w Polsce zatwierdzonych przez Kościół — muzyka sakralna wyrusza z Warmii w podróż przez największe sale koncertowe i świątynie świata.</p>
+<a class="btn solid" href="#trasa" data-pl="Zobacz proponowaną trasę" data-en="See the proposed tour">Zobacz proponowaną trasę</a> <a class="btn" href="#bilety" data-pl="Powiadom mnie" data-en="Notify me">Powiadom mnie</a></div>
+</header>
+<section id="trasa"><div class="eyebrow" data-pl="Trasa" data-en="The tour">Trasa</div><h2 data-pl="Od Gietrzwałdu do Gietrzwałdu" data-en="From Gietrzwałd back to Gietrzwałd">Od Gietrzwałdu do Gietrzwałdu</h2><div class="divider"></div>
+<div class="note" role="note" data-pl="Proponowana trasa — terminy do potwierdzenia. Żadne miejsce ani data nie zostały jeszcze uzgodnione z gospodarzami." data-en="Proposed tour — dates to be confirmed. No venue or date has been agreed with the hosts yet.">Proponowana trasa — terminy do potwierdzenia. Żadne miejsce ani data nie zostały jeszcze uzgodnione z gospodarzami.</div>
+<div id="map" role="region" aria-label="Mapa proponowanej trasy"></div><ol class="stops" id="stops"></ol></section>
+<section id="miejsca"><div class="eyebrow" data-pl="Miejsca" data-en="Venues">Miejsca</div><h2 data-pl="Sale i świątynie" data-en="Halls and sanctuaries">Sale i świątynie</h2><div class="divider"></div><div class="grid" id="cards"></div></section>
+<section id="bilety" class="tickets"><div class="eyebrow" data-pl="Bilety" data-en="Tickets">Bilety</div><h2 data-pl="Bilety wkrótce" data-en="Tickets coming soon">Bilety wkrótce</h2>
+<p style="color:var(--mut)" data-pl="Zapisz się, a damy znać, gdy terminy zostaną potwierdzone i ruszy sprzedaż." data-en="Sign up and we'll let you know once dates are confirmed and sales open.">Zapisz się, a damy znać, gdy terminy zostaną potwierdzone i ruszy sprzedaż.</p>
+<form id="f" novalidate><div><label for="n" data-pl="Imię" data-en="Name">Imię</label><input id="n" name="n" autocomplete="name"></div>
+<div><label for="e">E-mail *</label><input id="e" name="e" type="email" required autocomplete="email"></div>
+<div><label for="c" data-pl="Interesujące miasto" data-en="City of interest">Interesujące miasto</label><select id="c"></select></div>
+<div class="chk"><input id="z" type="checkbox" required><label for="z" data-pl="Zgadzam się na kontakt w sprawie trasy." data-en="I agree to be contacted about the tour.">Zgadzam się na kontakt w sprawie trasy.</label></div>
+<p id="err" role="alert" style="color:#e88;margin:0"></p><button class="solid btn" type="submit" data-pl="Powiadom mnie" data-en="Notify me">Powiadom mnie</button>
+<small style="color:var(--mut)" data-pl="Podgląd: formularz nie wysyła danych — nic nie jest zapisywane." data-en="Preview: the form sends no data — nothing is stored.">Podgląd: formularz nie wysyła danych — nic nie jest zapisywane.</small></form>
+<div id="thanks" role="status" tabindex="-1"><h3 data-pl="Dziękujemy!" data-en="Thank you!">Dziękujemy!</h3><p data-pl="To wersja podglądowa — zgłoszenie nie zostało wysłane. W wersji docelowej otrzymasz potwierdzenie e-mailem." data-en="This is a preview — your sign-up was not sent. In the final version you will receive an email confirmation.">To wersja podglądowa — zgłoszenie nie zostało wysłane. W wersji docelowej otrzymasz potwierdzenie e-mailem.</p></div></section>
+</main>
+<footer id="kontakt"><p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold2)">Gietrzwałd 150 · 1877–2027</p>
+<p><span data-pl="Organizator" data-en="Organizer">Organizator</span>: Ambasada Muzyki · <span data-pl="ekosystem" data-en="part of the">ekosystem</span> Aurexion</p>
+<p>Kontakt: <span class="ph">kontakt@ — do uzupełnienia</span> · Tel.: <span class="ph">do uzupełnienia</span></p>
+<p style="font-size:.78rem">Mapa © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <span data-pl="Strona podglądowa, nie stanowi oferty." data-en="Preview site, not an offer.">Strona podglądowa, nie stanowi oferty.</span></p></footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js"></script></body></html>
